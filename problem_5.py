@@ -30,6 +30,10 @@ class Block:
         previous_hash : str
             The hash of the previous block in the chain.
         """
+        # Ensure that data is not empty
+        if not data:
+            raise ValueError("Block data cannot be empty.")
+        
         self.timestamp: datetime.datetime = timestamp
         self.data: str = data
         self.previous_hash: str = previous_hash
@@ -99,6 +103,9 @@ class Blockchain:
         data : str
             The data to be stored in the new block.
         """
+        if not data:
+            raise ValueError("Block data cannot be empty.")
+        
         previous_block = self.chain[-1]
         new_block = Block(datetime.datetime.now(), data, previous_block.hash)
         self.chain.append(new_block)
@@ -141,3 +148,19 @@ if __name__ == "__main__":
     for i in range(1, len(blockchain.chain)):
         assert blockchain.chain[i].previous_hash == blockchain.chain[i-1].hash
     print("Blockchain integrity verified after adding more blocks.")
+    
+    # Test Case 4: Edge case - Empty data for a block
+    print("\nTest Case 4: Edge case - Empty data for a block")
+    try:
+        blockchain.add_block("")  # Should raise ValueError
+    except ValueError as e:
+        print(f"Error: {e}")
+
+    # Test Case 5: Edge case - Identical timestamps for blocks
+    print("\nTest Case 5: Edge case - Identical timestamps for blocks")
+    blockchain.add_block("Block 6 Data")
+    blockchain.add_block("Block 7 Data")  # Same timestamp, but different data should still work
+    print(blockchain)
+    for i in range(1, len(blockchain.chain)):
+        assert blockchain.chain[i].previous_hash == blockchain.chain[i-1].hash
+    print("Blockchain integrity verified after adding blocks with identical timestamps.")

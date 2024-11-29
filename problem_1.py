@@ -103,4 +103,26 @@ if __name__ == '__main__':
     zero_cache.set(1, "x")  # Should not store anything
     assert zero_cache.get(1) == -1  # Returns -1
 
+    # Test Case 4: Repeated Access to Same Value
+    repeated_cache = LRU_Cache(3)
+    repeated_cache.set(1, "one")
+    repeated_cache.set(2, "two")
+    repeated_cache.set(3, "three")
+    assert repeated_cache.get(1) == "one"  # Returns "one"
+    repeated_cache.get(1)  # Accessing "one" again
+    repeated_cache.set(4, "four")  # This should evict key 2, as key 1 was accessed recently
+    assert repeated_cache.get(2) == -1  # Returns -1, 2 was evicted
+    assert repeated_cache.get(4) == "four"  # Returns "four"
+
+    # Test Case 5: Handling invalid values (negative key)
+    invalid_cache = LRU_Cache(3)
+    invalid_cache.set(-1, "negative")  # Key is negative, but allowed by logic
+    assert invalid_cache.get(-1) == "negative"  # Returns "negative"
+    assert invalid_cache.get(999) == -1  # Returns -1 for invalid key
+
+    # Test Case 6: High Capacity
+    high_capacity_cache = LRU_Cache(10000)
+    high_capacity_cache.set(1, "high_capacity_value")
+    assert high_capacity_cache.get(1) == "high_capacity_value"  # Returns "high_capacity_value"
+
     print("All test cases passed!")

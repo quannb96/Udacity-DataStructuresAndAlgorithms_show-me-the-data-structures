@@ -121,7 +121,7 @@ def generate_huffman_codes(node: Optional[HuffmanNode], code: str, huffman_codes
     generate_huffman_codes(node.left, code + '0', huffman_codes)
     generate_huffman_codes(node.right, code + '1', huffman_codes)
 
-def huffman_encoding(data: str) -> tuple[str, Optional[HuffmanNode]]:
+def huffman_encoding(data: str) -> tuple[Optional[str], Optional[HuffmanNode]]:
     """
     Encode the given data using Huffman coding.
 
@@ -135,7 +135,23 @@ def huffman_encoding(data: str) -> tuple[str, Optional[HuffmanNode]]:
     Tuple[str, Optional[HuffmanNode]]
         A tuple containing the encoded string and the root of the Huffman Tree.
     """
+    # Validate input
+    if not isinstance(data, str):
+        raise ValueError("Input data must be a string.")
+    if not data:
+        print("No data to encode!")
+        return None, None
+
     frequency = calculate_frequencies(data)
+
+    # Handle single unique character case
+    if len(frequency) == 1:
+        single_char = next(iter(frequency))
+        huffman_codes = {single_char: '0'}
+        encoded_data = '0' * len(data)
+        return encoded_data, HuffmanNode(single_char, frequency[single_char])
+
+    # Build Huffman tree for other cases
     tree = build_huffman_tree(frequency)
 
     huffman_codes = {}
@@ -145,7 +161,7 @@ def huffman_encoding(data: str) -> tuple[str, Optional[HuffmanNode]]:
 
     return encoded_data, tree
 
-def huffman_decoding(encoded_data: str, tree: Optional[HuffmanNode]) -> str:
+def huffman_decoding(encoded_data: Optional[str], tree: Optional[HuffmanNode]) -> str:
     """
     Decode the given encoded data using the Huffman Tree.
 
@@ -161,6 +177,15 @@ def huffman_decoding(encoded_data: str, tree: Optional[HuffmanNode]) -> str:
     str
         The decoded string.
     """
+    # Validate input
+    if not encoded_data or not tree:
+        print("No encoded data or Huffman tree provided!")
+        return ""
+
+    # Special case: single character encoding
+    if tree.char is not None:
+        return tree.char * len(encoded_data)  # Directly decode for single character case
+
     decoded_text = ''
     current_node = tree
 
@@ -205,3 +230,23 @@ if __name__ == "__main__":
     decoded_data = huffman_decoding(encoded_data, tree)
     print("Decoded:", decoded_data)
     assert sentence == decoded_data
+
+    # Test Case 4: Single repeating character
+    print("\nTest Case 4: Single repeating character")
+    sentence = "AAAAAAA"
+    encoded_data, tree = huffman_encoding(sentence)
+    print("Encoded:", encoded_data)
+    decoded_data = huffman_decoding(encoded_data, tree)
+    print("Decoded:", decoded_data)
+    assert sentence == decoded_data
+
+    # Test Case 5: Empty string
+    print("\nTest Case 5: Empty string")
+    sentence = ""
+    encoded_data, tree = huffman_encoding(sentence)
+    if encoded_data is None and tree is None:
+        print("Encoded: None")
+        print("Decoded: None")
+        assert sentence == ""
+    else:
+        print("Error: Empty string not handled correctly!")

@@ -253,3 +253,23 @@ if __name__ == "__main__":
     print("\nTest Case 4:")
     print("Union:", union(linked_list_7, linked_list_8)) # Expected: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
     print("Intersection:", intersection(linked_list_7, linked_list_8)) # Expected: empty
+
+    ## Test case 5: One list is empty
+    linked_list_9 = LinkedList()
+    linked_list_10 = LinkedList()
+
+    element_2 = [6, 32, 4, 9, 6, 1, 11, 21, 1]
+    for i in element_2:
+        linked_list_10.append(i)
+
+    print("\nTest Case 5: One list is empty")
+    print("Union:", union(linked_list_9, linked_list_10)) # Expected: 6, 32, 4, 9, 1, 11, 21
+    print("Intersection:", intersection(linked_list_9, linked_list_10)) # Expected: empty
+
+    ## Test case 6: Both lists are empty
+    linked_list_11 = LinkedList()
+    linked_list_12 = LinkedList()
+
+    print("\nTest Case 6: Both lists are empty")
+    print("Union:", union(linked_list_11, linked_list_12)) # Expected: empty
+    print("Intersection:", intersection(linked_list_11, linked_list_12)) # Expected: empty

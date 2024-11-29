@@ -115,8 +115,6 @@ def is_user_in_group(user: str, group: Group) -> bool:
     return False
 
 if __name__ == "__main__":
-    # Testing the implementation
-
     # Creating groups and users
     parent = Group("parent")
     child = Group("child")
@@ -141,3 +139,20 @@ if __name__ == "__main__":
     parent_user = "parent_user"
     parent.add_user(parent_user)
     print(is_user_in_group(parent_user, parent)) # Expected output: True
+
+    # Test Case 4: Empty group (no users or subgroups)
+    print("\nTest Case 4: Empty group")
+    empty_group = Group("empty_group")
+    print(is_user_in_group("any_user", empty_group))  # Expected output: False
+
+    # Test Case 5: User not found in group or sub-groups
+    print("\nTest Case 5: User not found in group or sub-groups")
+    user_not_found = "user_not_found"
+    print(is_user_in_group(user_not_found, parent))  # Expected output: False
+
+    # Test Case 6: Group with no parent (checking root-level groups)
+    print("\nTest Case 6: Group with no parent")
+    root_group = Group("root_group")
+    root_group.add_user("root_user")
+    print(is_user_in_group("root_user", root_group))  # Expected output: True
+    print(is_user_in_group("non_existent_user", root_group))  # Expected output: False
